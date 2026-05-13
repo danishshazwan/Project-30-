@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/forms.css" />
+  <link rel="stylesheet" href="css/cards.css" />
+  <link rel="stylesheet" href="css/media.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <style>
+    /* page specific */
+    #reports-chart {
+      width: 100%;
+      height: 260px;
+    }
+
+    .report-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 0 20px 20px;
+    }
+
+    .summary-tile {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .summary-k {
+      color: var(--text-sub);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .summary-v {
+      color: var(--text-main);
+      font-weight: 900;
+      font-size: 22px;
+    }
+
+    .report-analytics {
+      margin: 0 20px 20px;
+    }
+
+    .report-period-tabs {
+      display: flex;
+      gap: 10px;
+      padding: 0 20px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+    }
+
+    .report-period-tabs::-webkit-scrollbar { display: none; }
+
+    .report-period-btn {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+
+    .report-period-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .report-chart-card {
+      margin: 0 20px 20px;
+      padding: 16px;
+    }
+
+    .list-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0 12px;
+    }
+
+    .muted {
+      color: var(--text-sub);
+      font-weight: 700;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container" id="app">
+
+    <div id="reports-page" class="screen active nav-screen">
+      <div class="page-header">
+        <h2>Reports</h2>
+        <button class="icon-btn" onclick="window.location.href='profile.html'" title="Back" style="color: var(--primary); background: var(--card-bg); border: 1px solid var(--border-color);">
+          <span style="font-size: 18px;">←</span>
+        </button>
+      </div>
+
+      <div class="report-period-tabs" aria-label="Report period">
+        <div class="report-period-btn" data-report-period="daily" onclick="window.setReportPeriod('daily', this)">Daily</div>
+        <div class="report-period-btn active" data-report-period="weekly" onclick="window.setReportPeriod('weekly', this)">Weekly</div>
+        <div class="report-period-btn" data-report-period="monthly" onclick="window.setReportPeriod('monthly', this)">Monthly</div>
+        <div class="report-period-btn" data-report-period="yearly" onclick="window.setReportPeriod('yearly', this)">Yearly</div>
+      </div>
+
+      <div class="report-summary-grid" role="region" aria-label="Report summary">
+        <div class="summary-tile">
+          <div class="summary-k">Total Income</div>
+          <div class="summary-v" id="report-total-income">RM0.00</div>
+        </div>
+        <div class="summary-tile">
+          <div class="summary-k">Total Expenses</div>
+          <div class="summary-v" id="report-total-expenses">RM0.00</div>
+        </div>
+        <div class="summary-tile">
+          <div class="summary-k">Total Savings</div>
+          <div class="summary-v" id="report-total-savings">RM0.00</div>
+        </div>
+        <div class="summary-tile">
+          <div class="summary-k">Highest Category</div>
+          <div class="summary-v" id="report-highest-category">- (RM0.00)</div>
+        </div>
+      </div>
+
+      <div class="report-analytics">
+        <div class="card" style="padding: 16px; margin-bottom: 16px; background: var(--primary); color: white; border-radius: 25px; text-align: center;">
+          <div class="muted" style="color: rgba(255,255,255,0.85);">This period vs summaries</div>
+          <div style="display:flex; justify-content:space-around; gap: 12px; margin-top: 10px; flex-wrap: wrap;">
+            <div style="min-width: 160px;">
+              <div class="muted" style="color: rgba(255,255,255,0.85);">Monthly Summary</div>
+              <div style="font-weight: 900; font-size: 22px;" id="report-monthly-summary">RM0.00</div>
+            </div>
+            <div style="min-width: 160px;">
+              <div class="muted" style="color: rgba(255,255,255,0.85);">Weekly Summary</div>
+              <div style="font-weight: 900; font-size: 22px;" id="report-weekly-summary">RM0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card report-chart-card">
+          <div class="list-label">
+            <h3 style="margin:0; font-size: 16px;">Expense by Category</h3>
+            <div class="muted">Bar chart</div>
+          </div>
+          <div style="height: 260px; position: relative;">
+            <canvas id="reports-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="card report-chart-card" style="padding: 16px;">
+          <div class="list-label">
+            <h3 style="margin:0; font-size: 16px;">Top Categories</h3>
+            <div class="muted">Up to 8</div>
+          </div>
+          <div id="report-category-analytics"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav" id="bottom-nav" style="display: flex;">
+      <div class="nav-item" onclick="window.location.href='dashboard.html'">
+        <div class="nav-icon">⌞</div><span>Home</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='stats.html'">
+        <div class="nav-icon">⟴</div><span>Stats</span>
+      </div>
+      <div class="fab" onclick="window.location.href='add-expense.html'">+</div>
+      <div class="nav-item" onclick="window.location.href='budget.html'">
+        <div class="nav-icon">💵</div><span>Budget</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='reports.html'">
+        <div class="nav-icon">📊</div><span>Reports</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/jquery-ui-interactions.js"></script>
+  <script src="js/jquery-form-validation.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/transactions.js"></script>
+  <script src="js/reports.js"></script>
+
+  <!-- Chart.js for reports charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+    if (typeof appInitForPage === 'function') appInitForPage();
+    else if (typeof window.appInitForPage === 'function') window.appInitForPage();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Expense</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/forms.css">
+<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/media.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+    <div id="add-expense-page" class="screen active">
+        <div class="page-header">
+            <span class="back-btn" onclick="window.location.href='dashboard.html'">←</span>
+            <h2>Add Expense</h2>
+        </div>
+
+        <div class="card" style="margin:20px;">
+            <div class="input-group"><label>Amount (RM)</label><input type="number" id="add-amount" placeholder="0.00"></div>
+            <div class="input-group"><label>Title/Description</label><input type="text" id="add-title" placeholder="e.g. Lunch"></div>
+            <div class="input-group">
+                <label>Category</label>
+                <select id="add-category">
+                    <option value="Food & Dining">Food & Dining</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Education">Education</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="saveExpense()">Add Now</button>
+        </div>
+
+        <div class="card" style="margin:20px;">
+            <h3 style="margin-bottom: 10px;">Add Media & Links</h3>
+
+
+            <div class="input-group">
+                <label>Upload Media (max 30: images/videos)</label>
+                <input type="file" id="media-file" multiple accept="image/*,video/*">
+            </div>
+
+            <div class="input-group">
+                <label>Hyperlink (max 10)</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="url" id="media-link" placeholder="https://example.com" style="flex:1;">
+                    <button class="btn" style="width:auto; padding: 12px 14px; margin-bottom:0; background: var(--primary); color:white; border:none;" type="button" onclick="addMediaLinkToList()">Add</button>
+                </div>
+            </div>
+
+            <div id="media-link-list" style="margin: 10px 0 15px;"></div>
+
+            <button class="btn" style="background: var(--card-bg); color: var(--primary); border: 2px solid var(--primary-light);" onclick="saveMedia()">Save Media & Links</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery-ui-interactions.js"></script>
+<script src="js/jquery-form-validation.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+<script src="js/media-handler.js"></script>
+
+<script>
+    if (typeof appInitForPage === 'function') appInitForPage();
+    else if (typeof window.appInitForPage === 'function') window.appInitForPage();
+
+    // Local UI-only helper: build a list of links before calling saveMedia()
+    window.__mediaLinkDrafts = window.__mediaLinkDrafts || [];
+
+    function addMediaLinkToList() {
+        const input = document.getElementById('media-link');
+        const url = (input && input.value ? input.value.trim() : '');
+        if (!url) return alert('Enter hyperlink');
+
+        if (!window.__mediaLinkDrafts) window.__mediaLinkDrafts = [];
+        if (window.__mediaLinkDrafts.length >= 10) return alert('Max 10 hyperlinks');
+
+        if (window.__mediaLinkDrafts.includes(url)) return;
+
+        window.__mediaLinkDrafts.push(url);
+        input.value = '';
+        renderMediaLinkList();
+    }
+
+    function renderMediaLinkList() {
+        const el = document.getElementById('media-link-list');
+        if (!el) return;
+        const list = window.__mediaLinkDrafts || [];
+
+        if (list.length === 0) {
+            el.innerHTML = '<p style="color: var(--text-sub); font-size: 13px; margin:0;">No hyperlinks added</p>';
+            return;
+        }
+
+        el.innerHTML = list.map((u, idx) => {
+            return `
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; background: var(--card-bg); border:1px solid var(--border-color); border-radius:14px; margin-bottom:10px;">
+                    <a href="${u}" target="_blank" style="color: var(--primary); word-break: break-word; font-weight:700; font-size: 13px;">${u}</a>
+                    <button type="button" class="btn" style="width:auto; padding: 10px 12px; margin-bottom:0; background: var(--danger-bg); color: var(--danger-text); border:none;" onclick="removeMediaLinkAt(${idx})">Remove</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function removeMediaLinkAt(idx) {
+        if (!window.__mediaLinkDrafts) return;
+        window.__mediaLinkDrafts.splice(idx, 1);
+        renderMediaLinkList();
+    }
+
+    renderMediaLinkList();
+</script>
+
+</body>
+</html>
+

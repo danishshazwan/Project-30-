@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/forms.css">
+<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/media.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<div class="app-container" id="app">
+    <div id="savings-page" class="screen active nav-screen">
+        <div class="page-header">
+            <span class="back-btn" onclick="window.location.href='profile.html'">←</span>
+            <h2>Savings</h2>
+        </div>
+        <div class="card" style="margin:20px;">
+            <h3>Your Savings 💰</h3>
+            <p>Monitor how much you've saved.</p>
+
+            <div class="input-group" style="margin-top:15px;">
+                <label>Savings Name/Title</label>
+                <input type="text" id="savings-name" placeholder="e.g. Emergency Fund" />
+            </div>
+
+            <div class="input-group">
+                <label>Purpose / Category</label>
+                <input type="text" id="savings-purpose" placeholder="e.g. Emergency Fund" />
+            </div>
+
+            <div class="input-group">
+                <label>Target Amount (RM) (optional)</label>
+                <input type="number" id="savings-target" placeholder="e.g. 5000" min="0" step="0.01" />
+            </div>
+
+            <div class="input-group">
+                <label>Current Amount (RM) (optional)</label>
+                <input type="number" id="savings-current" placeholder="0" min="0" step="0.01" />
+            </div>
+
+            <button class="btn btn-primary" type="button" style="margin-top:10px;" id="add-savings-btn">Add Savings</button>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn" type="button" style="width:50%; background:var(--card-bg); color:var(--primary); border:2px solid var(--primary-light); margin-bottom:0;" id="withdraw-savings-btn">Withdraw</button>
+                <button class="btn" type="button" style="width:50%; background:var(--danger-bg); color:var(--danger-text); border:none; margin-bottom:0;" id="reset-savings-btn">Reset</button>
+            </div>
+
+            <div class="card" style="margin-top:15px; padding:15px;">
+                <div style="display:flex; justify-content:space-between; gap:12px; margin-bottom:8px;">
+                    <div style="font-weight:900; color:var(--text-main);">Total Savings</div>
+                    <div id="savings-total" style="font-weight:900; color:var(--text-main);">RM0.00</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; gap:12px; margin-bottom:8px;">
+                    <div style="font-weight:900; color:var(--text-sub); font-size:13px;">Monthly Savings</div>
+                    <div id="savings-monthly" style="font-weight:900; color:var(--text-main); font-size:13px;">RM0.00</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; gap:12px;">
+                    <div style="font-weight:900; color:var(--text-sub); font-size:13px;">Weekly Savings</div>
+                    <div id="savings-weekly" style="font-weight:900; color:var(--text-main); font-size:13px;">RM0.00</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 15px 0 10px;">Savings Activity Log</h3>
+            <div id="savings-history"></div>
+        </div>
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery-ui-interactions.js"></script>
+<script src="js/jquery-form-validation.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+<script src="js/savings.js"></script>
+
+<script>
+
+
+    if (typeof appInitForPage === 'function') appInitForPage();
+    else if (typeof window.appInitForPage === 'function') window.appInitForPage();
+</script>
+</body>
+</html>
+

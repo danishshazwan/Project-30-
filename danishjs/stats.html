@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/forms.css">
+<link rel="stylesheet" href="css/cards.css">
+<link rel="stylesheet" href="css/media.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+    <div id="stats-page" class="screen active nav-screen">
+        <div class="page-header">
+            <h2>Statistics</h2>
+            <button class="icon-btn" onclick="downloadStats()" title="Download CSV">📥</button>
+        </div>
+
+        <div class="tabs">
+            <div class="tab" onclick="changeStatsTab('week', this)">Week</div>
+            <div class="tab active" onclick="changeStatsTab('month', this)">Month</div>
+            <div class="tab" onclick="changeStatsTab('year', this)">Year</div>
+        </div>
+
+        <div id="filter-row-1" class="filter-scroll"></div>
+        <div id="filter-row-2" class="filter-scroll" style="margin-bottom: 15px;"></div>
+
+        <div class="card" style="margin: 0 20px 20px; text-align: center; background: var(--primary); color: white; border-radius: 25px; padding: 25px;">
+            <p id="stats-period-label" style="color: rgba(255,255,255,0.8); font-weight: 600; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">Total Spending</p>
+            <h1 id="stats-total-spent" style="color: white; font-size: 38px;">RM0.00</h1>
+        </div>
+
+        <h3 style="margin: 0 20px 15px;">Category Breakdown</h3>
+        <div id="stats-category-list"></div>
+    </div>
+
+    <div class="bottom-nav" id="bottom-nav" style="display: flex;">
+        <div class="nav-item" onclick="window.location.href='dashboard.html'"><div class="nav-icon">⊞</div><span>Home</span></div>
+        <div class="nav-item active" onclick="switchTab('stats-page', this)"><div class="nav-icon">◴</div><span>Stats</span></div>
+        <div class="fab" onclick="window.location.href='add-expense.html'">+</div>
+        <div class="nav-item" onclick="window.location.href='budget.html'"><div class="nav-icon">👛</div><span>Budget</span></div>
+        <div class="nav-item" onclick="window.location.href='profile.html'"><div class="nav-icon">👤</div><span>Profile</span></div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery-ui-interactions.js"></script>
+<script src="js/jquery-form-validation.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/transactions.js"></script>
+<script>
+    if (typeof appInitForPage === 'function') appInitForPage();
+    else if (typeof window.appInitForPage === 'function') window.appInitForPage();
+</script>
+</body>
+</html>
+

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROJECT 30% — Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div id="loading-screen">
+    <div class="loader-ring">
+      <div class="loader-inner"></div>
+    </div>
+    <div class="loader-text">INITIALIZING SYSTEM</div>
+    <div class="loader-bar">
+      <div class="loader-fill"></div>
+    </div>
+  </div>
+
+  <!-- ===== CUSTOM CURSOR ===== -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+  <div class="mouse-glow"></div>
+
+  <!-- ===== SCANLINES OVERLAY ===== -->
+  <div class="scanlines"></div>
+
+  <!-- ===== CORNER DECORATIONS ===== -->
+  <div class="corner-deco top-left"></div>
+  <div class="corner-deco top-right"></div>
+  <div class="corner-deco bottom-left"></div>
+  <div class="corner-deco bottom-right"></div>
+
+  <!-- ===== ANIMATED BACKGROUND ===== -->
+  <div class="bg-canvas">
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <canvas id="starCanvas"></canvas>
+    <canvas id="lineCanvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.6;"></canvas>
+    <div id="particles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="content-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+
+      <!-- Badge -->
+      <div class="hero-badge">
+        <i class="fa-solid fa-circle-dot" style="margin-right:6px;"></i>
+        SYSTEM ACTIVE &nbsp;/&nbsp; VERSION 3.0
+      </div>
+
+      <!-- Main Title -->
+      <h1 class="hero-title glitch" data-text="PROJECT 30%">PROJECT 30%</h1>
+
+      <!-- Subtitle with typing effect -->
+      <p class="hero-subtitle">
+        Developed by&nbsp;<span id="typing-text" data-text="Danish & Hafiz"></span><span class="typing-cursor"></span>
+      </p>
+
+      <!-- Divider -->
+      <div class="hero-divider"></div>
+
+      <!-- CTA Buttons -->
+      <div class="btn-group">
+
+        <!-- ACCESS JOBSHEET button -->
+        <button class="btn-futuristic btn-primary" data-modal="open" aria-label="Access Jobsheet">
+          <i class="fa-solid fa-folder-open btn-icon"></i>
+          ACCESS JOBSHEET
+        </button>
+
+        <!-- ABOUT US button -->
+        <a href="aboutus.html" class="btn-futuristic btn-secondary" aria-label="About Us">
+          <i class="fa-solid fa-users btn-icon"></i>
+          ABOUT US
+        </a>
+
+      </div>
+
+      <!-- Floating scroll hint -->
+      <div style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);animation:fadeIn 1s ease 2.5s both;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.3;">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:4px;color:var(--neon-cyan);">SCROLL</span>
+          <i class="fa-solid fa-chevron-down" style="color:var(--neon-cyan);font-size:10px;animation:bounce 2s ease-in-out infinite;"></i>
+        </div>
+      </div>
+
+    </section>
+
+  </div><!-- /content-wrapper -->
+
+  <!-- ===== STATUS BAR ===== -->
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span class="status-text">PROJECT 30%</span>
+    <span class="status-text" style="opacity:0.4;">|</span>
+    <span class="status-text" id="status-time">00:00:00</span>
+    <span class="status-text" style="opacity:0.4;">|</span>
+    <span class="status-text" style="color:var(--neon-cyan);">ONLINE</span>
+  </div>
+
+  <!-- ===== JOBSHEET MODAL ===== -->
+  <div class="modal-overlay" id="jobsheet-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-panel">
+
+      <!-- Close Button -->
+      <button class="modal-close" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div id="modal-title" class="modal-title">SELECT DEVELOPER</div>
+      <div class="modal-subtitle">
+        <i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>
+        CHOOSE A PROFILE TO ACCESS JOBSHEET
+      </div>
+
+      <!-- Profile Cards Grid -->
+      <div class="profile-grid">
+
+        <!-- Danish Card -->
+        <div class="profile-card">
+          <div class="profile-card-inner">
+            <div class="profile-avatar">
+              <div class="avatar-ring">
+                <i class="fa-solid fa-user-astronaut"></i>
+              </div>
+            </div>
+            <div class="profile-name">Danish Shazwan<br>Bin Suwandi</div>
+            <div class="profile-id">
+              <i class="fa-solid fa-id-badge" style="margin-right:4px;"></i>
+              2402072 &nbsp;/&nbsp; DANISH
+            </div>
+            <a href="danishjs/index.html" class="btn-access" aria-label="Access Danish's Jobsheet">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              ACCESS FILES
+            </a>
+          </div>
+        </div>
+
+        <!-- Hafiz Card -->
+        <div class="profile-card">
+          <div class="profile-card-inner">
+            <div class="profile-avatar">
+              <div class="avatar-ring">
+                <i class="fa-solid fa-user-ninja"></i>
+              </div>
+            </div>
+            <div class="profile-name">Muhammad Hafiz<br>Bin Hasan</div>
+            <div class="profile-id">
+              <i class="fa-solid fa-id-badge" style="margin-right:4px;"></i>
+               2402081 &nbsp;/&nbsp; HAFIZ
+            </div>
+            <a href="hafizjs/index.html" class="btn-access" aria-label="Access Hafiz's Jobsheet">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              ACCESS FILES
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /profile-grid -->
+
+    </div><!-- /modal-panel -->
+  </div><!-- /modal-overlay -->
+
+  <!-- ===== BOUNCE KEYFRAME ===== -->
+  <style>
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+  </style>
+
+  <script src="script.js"></script>
+</body>
+</html>
