@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-accent="blue" data-font="medium">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — Lumut Dash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+       TOKENS — light theme defaults
+    ═══════════════════════════════════════════ */
+    :root {
+      --blue:         #1A5FAD;
+      --blue-light:   #E8F0FB;
+      --green:        #0D6E56;
+      --green-light:  #E2F3EE;
+      --purple:       #6D28D9;
+      --purple-light: #EDE9FE;
+      --rose:         #BE123C;
+      --rose-light:   #FFE4E6;
+      --amber:        #B45309;
+      --amber-light:  #FAEEDA;
+
+      --accent:       var(--blue);
+      --accent-light: var(--blue-light);
+
+      --bg:           #F7F8FA;
+      --surface:      #FFFFFF;
+      --border:       #E5E7EB;
+      --text:         #111827;
+      --muted:        #6B7280;
+      --radius:       14px;
+      --base-font:    16px;
+    }
+
+    /* Accent colour overrides */
+    [data-accent="green"]  { --accent: var(--green);  --accent-light: var(--green-light); }
+    [data-accent="purple"] { --accent: var(--purple); --accent-light: var(--purple-light); }
+    [data-accent="rose"]   { --accent: var(--rose);   --accent-light: var(--rose-light); }
+
+    /* Font size */
+    [data-font="small"]  { --base-font: 14px; }
+    [data-font="large"]  { --base-font: 18px; }
+
+    /* Dark theme */
+    [data-theme="dark"] {
+      --bg:      #0F172A;
+      --surface: #1E293B;
+      --border:  #334155;
+      --text:    #F1F5F9;
+      --muted:   #94A3B8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: var(--base-font);
+      -webkit-font-smoothing: antialiased;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ═══ NAVBAR ═══ */
+    .navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 20;
+    }
+    .navbar-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px; color: var(--text);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+    }
+    .navbar-right { display: flex; align-items: center; gap: 10px; }
+    .nav-btn {
+      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 6px 14px; background: none; color: var(--muted);
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+    }
+    .nav-btn:hover          { border-color: var(--accent); color: var(--accent); }
+    .nav-btn.nav-btn-accent { background: var(--accent-light); color: var(--accent); border-color: transparent; }
+    .nav-btn.nav-btn-accent:hover { background: var(--accent); color: #fff; }
+
+    /* ═══ LAYOUT ═══ */
+    .page-wrap {
+      max-width: 960px; margin: 0 auto;
+      padding: 40px 24px 80px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ═══ SIDEBAR ═══ */
+    .sidebar { position: sticky; top: 80px; }
+
+    /* Avatar card */
+    .avatar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .avatar-ring {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 12px;
+      border: 3px solid var(--accent);
+      cursor: pointer; transition: transform 0.2s;
+      position: relative;
+    }
+    .avatar-ring:hover { transform: scale(1.06); }
+    .avatar-ring .edit-badge {
+      position: absolute; bottom: 0; right: 0;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 11px; display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--surface);
+    }
+    .avatar-name {
+      font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 2px;
+    }
+    .avatar-email { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .role-badge {
+      display: inline-block; font-size: 11px; font-weight: 500;
+      padding: 3px 10px; border-radius: 99px;
+      background: var(--accent-light); color: var(--accent);
+      text-transform: capitalize;
+    }
+
+    /* Sidebar nav */
+    .side-nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .side-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 16px; font-size: 13px; color: var(--muted);
+      cursor: pointer; border: none; background: none;
+      width: 100%; text-align: left; font-family: 'DM Sans', sans-serif;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .side-nav-item:last-child { border-bottom: none; }
+    .side-nav-item:hover { background: var(--bg); color: var(--text); }
+    .side-nav-item.active {
+      background: var(--accent-light); color: var(--accent); font-weight: 500;
+    }
+    .side-nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+    /* ═══ MAIN CONTENT ═══ */
+    .main { }
+
+    .section-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+      display: none;
+    }
+    .section-panel.active { display: block; }
+
+    .panel-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px; font-weight: 400;
+    }
+    .panel-header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .panel-body { padding: 24px; }
+
+    /* ═══ FORM ROWS ═══ */
+    .form-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+    .form-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .row-label { flex: 1; }
+    .row-label strong { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+    .row-label span   { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .row-control { flex-shrink: 0; }
+
+    /* Text inputs */
+    .field-input {
+      padding: 8px 12px; font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--surface); color: var(--text);
+      outline: none; transition: border-color 0.2s;
+      width: 220px;
+    }
+    .field-input:focus { border-color: var(--accent); }
+    .field-input.textarea { width: 100%; resize: vertical; min-height: 80px; margin-top: 8px; }
+
+    /* Select */
+    .field-select {
+      padding: 8px 12px; font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--surface); color: var(--text);
+      outline: none; cursor: pointer; min-width: 140px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+
+    /* Toggle switch */
+    .toggle { position: relative; width: 42px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; cursor: pointer;
+      background: var(--border); border-radius: 99px;
+      transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; left: 3px; top: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--accent); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* Accent colour picker */
+    .color-picker { display: flex; gap: 8px; }
+    .color-swatch {
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer; border: 2px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-swatch:hover { transform: scale(1.15); }
+    .color-swatch.selected { border-color: var(--text); transform: scale(1.1); }
+    .color-swatch.blue   { background: #1A5FAD; }
+    .color-swatch.green  { background: #0D6E56; }
+    .color-swatch.purple { background: #6D28D9; }
+    .color-swatch.rose   { background: #BE123C; }
+
+    /* Theme buttons */
+    .theme-btns { display: flex; gap: 8px; }
+    .theme-btn {
+      padding: 6px 14px; font-size: 12px; font-weight: 500;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: var(--bg); color: var(--muted);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+    .theme-btn.selected { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+    /* Font size buttons */
+    .font-btns { display: flex; gap: 8px; }
+    .font-btn {
+      padding: 5px 12px; border: 1.5px solid var(--border);
+      border-radius: 8px; background: var(--bg); color: var(--muted);
+      cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s;
+    }
+    .font-btn:nth-child(1) { font-size: 11px; }
+    .font-btn:nth-child(2) { font-size: 13px; }
+    .font-btn:nth-child(3) { font-size: 16px; }
+    .font-btn.selected { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+    /* Avatar picker */
+    .avatar-grid {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;
+    }
+    .avatar-option {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--bg); border: 2px solid var(--border);
+      font-size: 22px; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; transition: all 0.15s;
+    }
+    .avatar-option:hover { border-color: var(--accent); transform: scale(1.1); }
+    .avatar-option.selected { border-color: var(--accent); background: var(--accent-light); }
+
+    /* Save / action buttons */
+    .btn {
+      padding: 9px 20px; font-size: 13px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      border: none; border-radius: 9px;
+      cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-accent   { background: var(--accent); color: #fff; }
+    .btn-outline  { background: none; border: 1.5px solid var(--border); color: var(--muted); }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); opacity: 1; transform: none; }
+    .btn-danger   { background: none; border: 1.5px solid #FECACA; color: #DC2626; }
+    .btn-danger:hover { background: #FEF2F2; opacity: 1; transform: none; }
+
+    .panel-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #111827; color: #fff;
+      padding: 12px 20px; border-radius: 10px;
+      font-size: 13px; display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.3s; z-index: 99;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success::before { content: '✅'; }
+    .toast.warning::before { content: '⚠️'; }
+
+    /* Danger zone */
+    .danger-zone {
+      border: 1px solid #FECACA; border-radius: var(--radius);
+      overflow: hidden; margin-top: 20px;
+    }
+    .danger-zone .panel-header { background: #FEF2F2; border-color: #FECACA; }
+    .danger-zone .panel-header h2 { color: #DC2626; font-size: 16px; }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">🏫 Lumut Dash</a>
+  <div class="navbar-right">
+    <a class="nav-btn" href="index.html">← Back to portal</a>
+    <button class="nav-btn nav-btn-accent" id="btn-save-all">Save changes</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+
+    <div class="avatar-card">
+      <div class="avatar-ring" id="avatar-display" title="Click to change avatar">
+        🎓
+        <div class="edit-badge">✏️</div>
+      </div>
+      <div class="avatar-name" id="sidebar-name">—</div>
+      <div class="avatar-email" id="sidebar-email">—</div>
+      <div class="role-badge" id="sidebar-role">student</div>
+    </div>
+
+    <nav class="side-nav">
+      <button class="side-nav-item active" data-panel="profile">
+        <span class="icon">👤</span> Profile
+      </button>
+      <button class="side-nav-item" data-panel="appearance">
+        <span class="icon">🎨</span> Appearance
+      </button>
+      <button class="side-nav-item" data-panel="notifications">
+        <span class="icon">🔔</span> Notifications
+      </button>
+      <button class="side-nav-item" data-panel="display">
+        <span class="icon">🖥️</span> Display
+      </button>
+      <button class="side-nav-item" data-panel="account">
+        <span class="icon">🔐</span> Account & Security
+      </button>
+    </nav>
+
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main">
+
+    <!-- ── PROFILE ── -->
+    <div class="section-panel active" id="panel-profile">
+      <div class="panel-header">
+        <div>
+          <h2>Profile information</h2>
+          <p>Update your name, bio, and role</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Full name</strong>
+            <span>This is shown in the portal navbar</span>
+          </div>
+          <div class="row-control">
+            <input class="field-input" type="text" id="pref-name" placeholder="Your name" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Email address</strong>
+            <span>Your registered email (read-only)</span>
+          </div>
+          <div class="row-control">
+            <input class="field-input" type="email" id="pref-email" disabled style="opacity:0.5;cursor:not-allowed;" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Role</strong>
+            <span>Your relationship to the TVETMARA</span>
+          </div>
+          <div class="row-control">
+            <select class="field-select" id="pref-role">
+              <option value="student">🎓 Student</option>
+              <option value="teacher">🍎 Teacher</option>
+              <option value="parent">👪 Parent / Guardian</option>
+              <option value="staff">🏫 Admin Staff</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row" style="flex-direction:column; align-items:flex-start;">
+          <div class="row-label">
+            <strong>Bio</strong>
+            <span>A short description about yourself (optional)</span>
+          </div>
+          <textarea class="field-input textarea" id="pref-bio" placeholder="e.g. Form 4 student, Science stream..."></textarea>
+        </div>
+
+        <div class="form-row" style="flex-direction:column; align-items:flex-start;">
+          <div class="row-label">
+            <strong>Choose avatar</strong>
+            <span>Pick an emoji as your profile icon</span>
+          </div>
+          <div class="avatar-grid" id="avatar-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-footer">
+        <span style="font-size:12px;color:var(--muted);">Changes are saved to your browser</span>
+        <button class="btn btn-accent" id="btn-save-profile">Save profile</button>
+      </div>
+    </div>
+
+    <!-- ── APPEARANCE ── -->
+    <div class="section-panel" id="panel-appearance">
+      <div class="panel-header">
+        <div>
+          <h2>Appearance</h2>
+          <p>Theme, accent colour, and font size</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Theme</strong>
+            <span>Light or dark background for the portal</span>
+          </div>
+          <div class="row-control theme-btns">
+            <button class="theme-btn" data-theme="light">☀️ Light</button>
+            <button class="theme-btn" data-theme="dark">🌙 Dark</button>
+            <button class="theme-btn" data-theme="system">💻 System</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Accent colour</strong>
+            <span>Used for buttons, links, and highlights</span>
+          </div>
+          <div class="row-control color-picker">
+            <div class="color-swatch blue"   data-color="blue"   title="Blue"></div>
+            <div class="color-swatch green"  data-color="green"  title="Green"></div>
+            <div class="color-swatch purple" data-color="purple" title="Purple"></div>
+            <div class="color-swatch rose"   data-color="rose"   title="Rose"></div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Font size</strong>
+            <span>Adjusts text size across the portal</span>
+          </div>
+          <div class="row-control font-btns">
+            <button class="font-btn" data-size="small">A</button>
+            <button class="font-btn" data-size="medium">A</button>
+            <button class="font-btn" data-size="large">A</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-outline" id="btn-reset-appearance">Reset to defaults</button>
+        <button class="btn btn-accent" id="btn-save-appearance">Save appearance</button>
+      </div>
+    </div>
+
+    <!-- ── NOTIFICATIONS ── -->
+    <div class="section-panel" id="panel-notifications">
+      <div class="panel-header">
+        <div>
+          <h2>Notifications</h2>
+          <p>Choose which updates you want to see</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>News updates</strong>
+            <span>School news and announcements</span>
+          </div>
+          <label class="toggle row-control">
+            <input type="checkbox" id="pref-notifyNews" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Events</strong>
+            <span>Upcoming school events and activities</span>
+          </div>
+          <label class="toggle row-control">
+            <input type="checkbox" id="pref-notifyEvents" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Notices</strong>
+            <span>Important administrative notices</span>
+          </div>
+          <label class="toggle row-control">
+            <input type="checkbox" id="pref-notifyNotices" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+      </div>
+      <div class="panel-footer">
+        <span style="font-size:12px;color:var(--muted);">Notification settings affect your news feed</span>
+        <button class="btn btn-accent" id="btn-save-notifications">Save preferences</button>
+      </div>
+    </div>
+
+    <!-- ── DISPLAY ── -->
+    <div class="section-panel" id="panel-display">
+      <div class="panel-header">
+        <div>
+          <h2>Display</h2>
+          <p>Layout and content preferences</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Compact card view</strong>
+            <span>Show smaller news cards to fit more on screen</span>
+          </div>
+          <label class="toggle row-control">
+            <input type="checkbox" id="pref-compactCards" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Show emoji avatars</strong>
+            <span>Display emoji icons on news card thumbnails</span>
+          </div>
+          <label class="toggle row-control">
+            <input type="checkbox" id="pref-showAvatars" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Language</strong>
+            <span>Portal interface language</span>
+          </div>
+          <div class="row-control">
+            <select class="field-select" id="pref-language">
+              <option value="en">🇬🇧 English</option>
+              <option value="ms">🇲🇾 Bahasa Melayu</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+      <div class="panel-footer">
+        <span style="font-size:12px;color:var(--muted);">Display changes apply on next page load</span>
+        <button class="btn btn-accent" id="btn-save-display">Save display</button>
+      </div>
+    </div>
+
+    <!-- ── ACCOUNT & SECURITY ── -->
+    <div class="section-panel" id="panel-account">
+      <div class="panel-header">
+        <div>
+          <h2>Account & Security</h2>
+          <p>Password and account management</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Change password</strong>
+            <span>Update your login password</span>
+          </div>
+          <div class="row-control">
+            <a href="index2.html" class="btn btn-outline" style="text-decoration:none;display:inline-block;">Change password →</a>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Current email</strong>
+            <span>Your registered account email</span>
+          </div>
+          <div class="row-control">
+            <span id="account-email" style="font-size:13px;color:var(--muted);">—</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Privacy Policy</strong>
+            <span>How we handle your data</span>
+          </div>
+          <div class="row-control">
+            <a href="index3.html" class="btn btn-outline" style="text-decoration:none;display:inline-block;">Read →</a>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Terms of Service</strong>
+            <span>Rules for using the portal</span>
+          </div>
+          <div class="row-control">
+            <a href="index4.html" class="btn btn-outline" style="text-decoration:none;display:inline-block;">Read →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── DANGER ZONE ── -->
+    <div class="danger-zone" id="panel-danger">
+      <div class="panel-header">
+        <div>
+          <h2>⚠️ Danger zone</h2>
+          <p style="color:#DC2626;">These actions cannot be undone</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Reset all preferences</strong>
+            <span>Restore all settings back to their default values</span>
+          </div>
+          <div class="row-control">
+            <button class="btn btn-danger" id="btn-reset-prefs">Reset preferences</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="row-label">
+            <strong>Log out of all sessions</strong>
+            <span>Clear your saved session and return to the login page</span>
+          </div>
+          <div class="row-control">
+            <button class="btn btn-danger" id="btn-logout">Log out</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="dash_storage.js"></script>
+<script>
+$(function () {
+
+  // ── Guard: redirect if not logged in ────────────────────────
+  const session = Storage.loadSession();
+  if (!session) {
+    window.location.href = 'dash.html';
+    return;
+  }
+
+  const AVATARS = ['🎓','📚','✏️','🏫','⚽','🎨','🎵','🔬','💻','🌟','🦁','🦊','🐼','🌺','🚀','🏆'];
+
+  let prefs = Storage.getPrefs();
+
+  // ── Apply saved prefs to the page ───────────────────────────
+  function applyPrefs(p) {
+    $('html').attr('data-theme',  p.theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : p.theme);
+    $('html').attr('data-accent', p.accentColor);
+    $('html').attr('data-font',   p.fontSize);
+  }
+
+  // ── Populate UI from prefs ───────────────────────────────────
+  function populateUI() {
+    // Sidebar
+    $('#sidebar-name').text(session.name);
+    $('#sidebar-email').text(session.email);
+    $('#sidebar-role').text(prefs.role);
+    $('#avatar-display').html(prefs.avatar + '<div class="edit-badge">✏️</div>');
+
+    // Profile panel
+    $('#pref-name').val(prefs.bio ? session.name : session.name);
+    $('#pref-email').val(session.email);
+    $('#pref-role').val(prefs.role);
+    $('#pref-bio').val(prefs.bio);
+
+    // Avatar grid
+    $('#avatar-grid').empty();
+    AVATARS.forEach(a => {
+      const cls = a === prefs.avatar ? 'avatar-option selected' : 'avatar-option';
+      $('#avatar-grid').append(`<div class="${cls}" data-avatar="${a}">${a}</div>`);
+    });
+
+    // Appearance
+    $('.theme-btn').removeClass('selected');
+    $(`.theme-btn[data-theme="${prefs.theme}"]`).addClass('selected');
+    $('.color-swatch').removeClass('selected');
+    $(`.color-swatch[data-color="${prefs.accentColor}"]`).addClass('selected');
+    $('.font-btn').removeClass('selected');
+    $(`.font-btn[data-size="${prefs.fontSize}"]`).addClass('selected');
+
+    // Notifications
+    $('#pref-notifyNews').prop('checked', prefs.notifyNews);
+    $('#pref-notifyEvents').prop('checked', prefs.notifyEvents);
+    $('#pref-notifyNotices').prop('checked', prefs.notifyNotices);
+
+    // Display
+    $('#pref-compactCards').prop('checked', prefs.compactCards);
+    $('#pref-showAvatars').prop('checked', prefs.showAvatars);
+    $('#pref-language').val(prefs.language);
+
+    // Account
+    $('#account-email').text(session.email);
+
+    applyPrefs(prefs);
+  }
+
+  populateUI();
+
+  // ── Sidebar navigation ───────────────────────────────────────
+  $(document).on('click', '.side-nav-item', function () {
+    const panel = $(this).data('panel');
+    $('.side-nav-item').removeClass('active');
+    $(this).addClass('active');
+    $('.section-panel').removeClass('active');
+    $('#panel-' + panel).addClass('active');
+
+    // Always show danger zone on account tab
+    if (panel === 'account') $('#panel-danger').show();
+    else $('#panel-danger').hide();
+  });
+  // Hide danger zone by default
+  $('#panel-danger').hide();
+
+  // ── Avatar picker ────────────────────────────────────────────
+  $(document).on('click', '.avatar-option', function () {
+    $('.avatar-option').removeClass('selected');
+    $(this).addClass('selected');
+    const a = $(this).data('avatar');
+    prefs.avatar = a;
+    $('#avatar-display').html(a + '<div class="edit-badge">✏️</div>');
+  });
+
+  // Click avatar ring → scroll to avatar picker
+  $('#avatar-display').on('click', function () {
+    $('.side-nav-item[data-panel="profile"]').click();
+    setTimeout(() => $('#avatar-grid')[0].scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+  });
+
+  // ── Theme buttons ────────────────────────────────────────────
+  $(document).on('click', '.theme-btn', function () {
+    $('.theme-btn').removeClass('selected');
+    $(this).addClass('selected');
+    prefs.theme = $(this).data('theme');
+    applyPrefs(prefs);
+  });
+
+  // ── Colour swatches ──────────────────────────────────────────
+  $(document).on('click', '.color-swatch', function () {
+    $('.color-swatch').removeClass('selected');
+    $(this).addClass('selected');
+    prefs.accentColor = $(this).data('color');
+    applyPrefs(prefs);
+  });
+
+  // ── Font size buttons ─────────────────────────────────────────
+  $(document).on('click', '.font-btn', function () {
+    $('.font-btn').removeClass('selected');
+    $(this).addClass('selected');
+    prefs.fontSize = $(this).data('size');
+    applyPrefs(prefs);
+  });
+
+  // ── Save — Profile ───────────────────────────────────────────
+  $('#btn-save-profile').on('click', function () {
+    prefs.role   = $('#pref-role').val();
+    prefs.bio    = $('#pref-bio').val().trim();
+    const name   = $('#pref-name').val().trim();
+
+    if (name) {
+      // Update name in session + users
+      const users = Storage.getUsers();
+      const idx = users.findIndex(u => u.email === session.email);
+      if (idx !== -1) { users[idx].name = name; Storage.saveUsers(users); }
+      Storage.saveSession({ email: session.email, name });
+      session.name = name;
+    }
+
+    Storage.savePrefs(prefs);
+    populateUI();
+    toast('Profile saved!', 'success');
+  });
+
+  // ── Save — Appearance ────────────────────────────────────────
+  $('#btn-save-appearance, #btn-save-all').on('click', function () {
+    Storage.savePrefs(prefs);
+    toast('Appearance saved!', 'success');
+  });
+
+  // ── Reset appearance ─────────────────────────────────────────
+  $('#btn-reset-appearance').on('click', function () {
+    prefs.theme = 'light'; prefs.accentColor = 'blue'; prefs.fontSize = 'medium';
+    Storage.savePrefs(prefs);
+    populateUI();
+    toast('Appearance reset to defaults', 'success');
+  });
+
+  // ── Save — Notifications ─────────────────────────────────────
+  $('#btn-save-notifications').on('click', function () {
+    prefs.notifyNews    = $('#pref-notifyNews').is(':checked');
+    prefs.notifyEvents  = $('#pref-notifyEvents').is(':checked');
+    prefs.notifyNotices = $('#pref-notifyNotices').is(':checked');
+    Storage.savePrefs(prefs);
+    toast('Notification preferences saved!', 'success');
+  });
+
+  // ── Save — Display ───────────────────────────────────────────
+  $('#btn-save-display').on('click', function () {
+    prefs.compactCards = $('#pref-compactCards').is(':checked');
+    prefs.showAvatars  = $('#pref-showAvatars').is(':checked');
+    prefs.language     = $('#pref-language').val();
+    Storage.savePrefs(prefs);
+    toast('Display preferences saved!', 'success');
+  });
+
+  // ── Reset all prefs ──────────────────────────────────────────
+  $('#btn-reset-prefs').on('click', function () {
+    if (!confirm('Reset all preferences to defaults? This cannot be undone.')) return;
+    Storage.resetPrefs();
+    prefs = Storage.getPrefs();
+    populateUI();
+    toast('All preferences reset', 'warning');
+  });
+
+  // ── Logout ───────────────────────────────────────────────────
+  $('#btn-logout').on('click', function () {
+    Storage.clearSession();
+    window.location.href = 'dash.html';
+  });
+
+  // ── Toast helper ─────────────────────────────────────────────
+  function toast(msg, type = 'success') {
+    const $t = $('#toast');
+    $t.text(msg).removeClass('success warning').addClass(type).addClass('show');
+    setTimeout(() => $t.removeClass('show'), 2800);
+  }
+
+});
+</script>
+</body>
+</html>

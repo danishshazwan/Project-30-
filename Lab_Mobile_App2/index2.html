@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password — Lumut Dash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="card">
+
+  <a class="logo" href="index.html">
+    <div class="logo-icon">🏫</div>
+    <div class="logo-text">Lumut Dash <span>TVETMARA Lumut Portal</span></div>
+  </a>
+
+  <!-- ── STEP 1: Enter email ── -->
+  <div id="step-email">
+    <div class="icon-circle">🔑</div>
+    <h2>Forgot password?</h2>
+    <p class="subtitle">No worries! Enter your school email and we'll send you a reset code.</p>
+
+    <div class="steps">
+      <div class="step active" id="s1"></div>
+      <div class="step" id="s2"></div>
+      <div class="step" id="s3"></div>
+    </div>
+
+    <div class="msg msg-error" id="email-error"></div>
+
+    <div class="field">
+      <label>School email address</label>
+      <input type="email" id="reset-email" placeholder="you@school.edu.my" />
+    </div>
+
+    <button class="btn btn-blue" id="btn-send-code">Send reset code</button>
+    <a class="back-link" href="index.html">← Back to log in</a>
+  </div>
+
+  <!-- ── STEP 2: Enter OTP ── -->
+  <div id="step-otp" style="display:none;">
+    <div class="icon-circle">📩</div>
+    <h2>Check your email</h2>
+    <p class="subtitle" id="otp-subtitle">We sent a 6-digit code to <strong></strong>. Enter it below.</p>
+
+    <div class="steps">
+      <div class="step done"></div>
+      <div class="step active"></div>
+      <div class="step"></div>
+    </div>
+
+    <div class="msg msg-error"   id="otp-error"></div>
+    <div class="msg msg-success" id="otp-success"></div>
+
+    <div class="otp-row">
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric" />
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric" />
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric" />
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric" />
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric" />
+      <input type="text" maxlength="1" class="otp-digit" inputmode="numeric" />
+    </div>
+
+    <p class="resend">Didn't get it? <a id="btn-resend">Resend code</a></p>
+
+    <br>
+    <button class="btn btn-blue" id="btn-verify-otp">Verify code</button>
+    <button class="btn btn-outline" id="btn-back-email">← Change email</button>
+  </div>
+
+  <!-- ── STEP 3: New password ── -->
+  <div id="step-newpw" style="display:none;">
+    <div class="icon-circle">🔒</div>
+    <h2>Set new password</h2>
+    <p class="subtitle">Choose a strong password of at least 8 characters.</p>
+
+    <div class="steps">
+      <div class="step done"></div>
+      <div class="step done"></div>
+      <div class="step active"></div>
+    </div>
+
+    <div class="msg msg-error" id="newpw-error"></div>
+
+    <div class="field">
+      <label>New password</label>
+      <input type="password" id="new-password" placeholder="Min. 8 characters" />
+    </div>
+    <div class="field">
+      <label>Confirm new password</label>
+      <input type="password" id="confirm-password" placeholder="••••••••" />
+    </div>
+
+    <button class="btn btn-green" id="btn-save-pw">Save new password</button>
+    <button class="btn btn-outline" id="btn-back-otp">← Back</button>
+  </div>
+
+  <!-- ── Done ── -->
+  <div id="step-done">
+    <div class="tick">✅</div>
+    <h2>Password updated!</h2>
+    <p>Your password has been reset successfully. You can now log in with your new password.</p>
+    <a href="index.html"><button class="btn btn-blue">Back to log in</button></a>
+  </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="script2.js"></script>
+<script>
+$(function () {
+
+  // Simulated OTP (in production this comes from a backend/email service)
+  let generatedOTP = '';
+  let resetEmail   = '';
+
+  // ── Step 1: Send code ──────────────────────────────────────
+  $('#btn-send-code').on('click', sendCode);
+  $('#reset-email').on('keydown', e => { if (e.key === 'Enter') sendCode(); });
+
+  function sendCode() {
+    const email = $('#reset-email').val().trim();
+    const $err  = $('#email-error');
+
+    if (!email) return showMsg($err, 'Please enter your email address.');
+    if (!email.includes('@')) return showMsg($err, 'Please enter a valid email address.');
+
+    const user = Storage.findUser(email);
+    if (!user) return showMsg($err, 'No account found with this email address.');
+
+    // Generate a 6-digit OTP and "send" it (shown in console for demo)
+    generatedOTP = String(Math.floor(100000 + Math.random() * 900000));
+    resetEmail   = email;
+    console.log(`[Lumut Dash] OTP for ${email}: ${generatedOTP}`);
+
+    $err.hide();
+    $('#otp-subtitle strong').text(email);
+    $('#step-email').hide();
+    $('#step-otp').show();
+    $('.otp-digit').first().focus();
+
+    // In a real app, call your email API here instead of console.log
+  }
+
+  // ── OTP input — auto-advance and backspace ─────────────────
+  $(document).on('input', '.otp-digit', function () {
+    const val = $(this).val().replace(/\D/g, '');
+    $(this).val(val);
+    if (val) $(this).next('.otp-digit').focus();
+  });
+
+  $(document).on('keydown', '.otp-digit', function (e) {
+    if (e.key === 'Backspace' && !$(this).val()) {
+      $(this).prev('.otp-digit').focus();
+    }
+  });
+
+  // ── Resend ─────────────────────────────────────────────────
+  $('#btn-resend').on('click', function () {
+    generatedOTP = String(Math.floor(100000 + Math.random() * 900000));
+    console.log(`[Lumut Dash] Resent OTP for ${resetEmail}: ${generatedOTP}`);
+    $('.otp-digit').val('');
+    $('.otp-digit').first().focus();
+    showMsg($('#otp-success'), 'A new code has been sent.');
+    $('#otp-error').hide();
+  });
+
+  // ── Step 2: Verify OTP ─────────────────────────────────────
+  $('#btn-verify-otp').on('click', verifyOTP);
+
+  function verifyOTP() {
+    const entered = $('.otp-digit').map((_, el) => el.value).get().join('');
+    const $err    = $('#otp-error');
+
+    if (entered.length < 6) return showMsg($err, 'Please enter all 6 digits.');
+
+    if (entered !== generatedOTP) {
+      return showMsg($err, 'Incorrect code. Please try again.');
+    }
+
+    $err.hide(); $('#otp-success').hide();
+    $('#step-otp').hide();
+    $('#step-newpw').show();
+    $('#new-password').focus();
+  }
+
+  // ── Step 3: Save new password ──────────────────────────────
+  $('#btn-save-pw').on('click', savePassword);
+
+  function savePassword() {
+    const pw      = $('#new-password').val();
+    const confirm = $('#confirm-password').val();
+    const $err    = $('#newpw-error');
+
+    if (!pw || !confirm)    return showMsg($err, 'Please fill in both fields.');
+    if (pw.length < 8)      return showMsg($err, 'Password must be at least 8 characters.');
+    if (pw !== confirm)     return showMsg($err, 'Passwords do not match.');
+
+    // Update password in localStorage
+    const users = Storage.getUsers();
+    const idx   = users.findIndex(u => u.email === resetEmail);
+    if (idx !== -1) {
+      users[idx].password = pw;
+      Storage.saveUsers(users);
+    }
+
+    $err.hide();
+    $('#step-newpw').hide();
+    $('#step-done').show();
+  }
+
+  // ── Navigation ─────────────────────────────────────────────
+  $('#btn-back-email').on('click', () => { $('#step-otp').hide();   $('#step-email').show(); });
+  $('#btn-back-otp').on('click',   () => { $('#step-newpw').hide(); $('#step-otp').show(); });
+
+  // ── Helper ─────────────────────────────────────────────────
+  function showMsg($el, msg) { $el.text(msg).show(); }
+
+});
+</script>
+</body>
+</html>

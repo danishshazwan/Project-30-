@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumut Dash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="style.css" rel="stylesheet">
+  
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     AUTH PAGE
+══════════════════════════════════ -->
+<div id="auth-page">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <div class="logo-icon">🏫</div>
+      <div class="logo-text">
+        Lumut Dash
+        <span>TVETMARA Lumut Portal</span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="login">Log in</button>
+      <button class="tab" data-tab="signup">Sign up</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="form-section active" id="login">
+      <div class="form-head">
+        <h3>Welcome</h3>
+        <p>Log in to your TVETMARA Lumut portal account</p>
+      </div>
+
+      <div class="error-msg" id="login-error"></div>
+
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="login-email" placeholder="you@school.edu.my" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+      </div>
+      <div class="forgot"><a href="index2.html">Forgot password?</a></div>
+
+      <button class="btn btn-login" id="btn-login">Log in</button>
+
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div class="form-section" id="signup">
+      <div class="form-head">
+        <h3>Create account</h3>
+        <p>Register for the TVETMARA Lumut portal</p>
+      </div>
+
+      <div class="error-msg" id="signup-error"></div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>First name</label>
+          <input type="text" id="signup-firstname" placeholder="Ahmad" />
+        </div>
+        <div class="field">
+          <label>Last name</label>
+          <input type="text" id="signup-lastname" placeholder="bin Ali" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Min. 8 characters" />
+      </div>
+      <div class="field">
+        <label>Confirm password</label>
+        <input type="password" id="signup-confirm" placeholder="••••••••" />
+      </div>
+
+      <button class="btn btn-sign_up" id="btn-signup">Create account</button>
+
+      <p class="terms">By creating an account you agree to our <a href="index4.html">Terms of Service</a> and <a href="index3.html">Privacy Policy</a></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     NEWS PAGE
+══════════════════════════════════ -->
+<div id="news-page">
+
+  <!-- Shared navbar template -->
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">🏫 Lumut Dash</a>
+  <div class="navbar-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="index6.html">News</a>
+    <a class="nav-link" href="index8.html">Events</a>
+    <a class="nav-link" href="index7.html">Notices</a>
+    <a class="nav-link" href="index9.html">Blog</a>
+    <a class="nav-link" href="index10.html">Programs</a>
+    <a class="nav-link" href="index11.html">Activity Calendar</a>
+    <a class="nav-link" href="index12.html">About Website</a>
+    <a class="nav-link" href="index13.html">About TVETMARA Lumut</a>
+    <a class="nav-link" href="index14.html">Contact</a>
+    <a class="nav-link" href="index15.html">FAQ</a>
+  </div>
+  <div class="navbar-right">
+    <span id="user-pill" class="text-muted" style="font-size:13px;display:none;">👤 <span id="display-name"></span></span>
+    <a class="btn-nav accent" href="index5.html">Profile</a>
+    <button class="btn-nav danger" id="btn-logout">Log out</button>
+  </div>
+</nav>
+
+  <div class="main-content">
+
+    <div class="section-header">
+      <div class="header-left">
+        <div class="header-dot"></div>
+        <h1 class="header-title">What's new</h1>
+        <span class="header-badge">5 updates</span>
+      </div>
+    </div>
+
+    <!-- Filter buttons -->
+    <div class="filter-bar">
+      <button class="filter-btn active f-all"  data-filter="all">All</button>
+      <button class="filter-btn f-news"         data-filter="news">📰 News</button>
+      <button class="filter-btn f-event"        data-filter="event">🎉 Events</button>
+      <button class="filter-btn f-notice"       data-filter="notice">📢 Notices</button>
+    </div>
+
+    <div class="no-results" id="no-results">No items found for this filter.</div>
+
+    <div class="cards-grid" id="cards-grid">
+
+      <div class="card" data-type="news">
+        <div class="card-img-placeholder" style="background:#E6F1FB;">📰</div>
+        <div class="card-body">
+          <span class="badge badge-news">News</span>
+          <p class="card-title">School wins regional science fair championship</p>
+          <p class="card-desc">Our students took first place across three categories, impressing judges with innovative projects on renewable energy and biodiversity.</p>
+          <div class="card-meta">
+            <span>📅 8 May 2026</span>
+            <span>👤 Admin</span>
+            <a class="read-more" href="#">Read more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-type="event">
+        <div class="card-img-placeholder" style="background:#E1F5EE;">🎉</div>
+        <div class="card-body">
+          <span class="badge badge-event">Event</span>
+          <p class="card-title">Annual sports day — registration now open</p>
+          <p class="card-desc">Join us on 20 June for a full day of athletics, team games, and friendly competition. All students are encouraged to sign up before 10 June.</p>
+          <div class="card-meta">
+            <span>📅 20 Jun 2026</span>
+            <span>📍 School field</span>
+            <a class="read-more" href="#">Read more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-type="notice">
+        <div class="card-img-placeholder" style="background:#FAEEDA;">📢</div>
+        <div class="card-body">
+          <span class="badge badge-notice">Notice</span>
+          <p class="card-title">Mid-year exam schedule released</p>
+          <p class="card-desc">The examination timetable for July has been published. Students are advised to check their personal schedules on the portal and plan accordingly.</p>
+          <div class="card-meta">
+            <span>📅 5 May 2026</span>
+            <span>👤 Academic office</span>
+            <a class="read-more" href="#">Read more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-type="news">
+        <div class="card-img-placeholder" style="background:#E6F1FB;">🏆</div>
+        <div class="card-body">
+          <span class="badge badge-news">News</span>
+          <p class="card-title">Debate team advances to national finals</p>
+          <p class="card-desc">Our school debate team secured their spot in the national finals after a convincing win at the state-level competition last weekend.</p>
+          <div class="card-meta">
+            <span>📅 3 May 2026</span>
+            <span>👤 Admin</span>
+            <a class="read-more" href="#">Read more →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-type="event">
+        <div class="card-img-placeholder" style="background:#E1F5EE;">🎨</div>
+        <div class="card-body">
+          <span class="badge badge-event">Event</span>
+          <p class="card-title">School art exhibition — open to all students</p>
+          <p class="card-desc">Submit your artwork by 25 May to be featured in the end-of-term art exhibition. All mediums are welcome — paintings, photography, digital art and more.</p>
+          <div class="card-meta">
+            <span>📅 30 May 2026</span>
+            <span>📍 Hall B</span>
+            <a class="read-more" href="#">Read more →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- jQuery from CDN -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- localStorage helpers -->
+<script src="script2.js"></script>
+<!-- jQuery app logic -->
+<script src="script.js"></script>
+
+</body>
+</html>
